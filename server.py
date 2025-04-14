@@ -7,7 +7,7 @@ import queue
 import ssl
 import threading
 
-import pyautogui
+from pynput.keyboard import Controller
 from aiohttp import web
 from aiortc import (
     RTCConfiguration,
@@ -16,6 +16,7 @@ from aiortc import (
     RTCSessionDescription,
 )
 
+
 ROOT = os.path.dirname(__file__)
 
 # ----- 按键队列与后台线程 -----
@@ -23,19 +24,22 @@ key_queue = queue.Queue()
 
 
 def key_worker():
+    # 使用 pynput 的 Controller 来发送按键事件
+    keyboard = Controller()
     while True:
         action, key = key_queue.get()
         try:
             if action == "down":
-                pyautogui.keyDown(key)
+                keyboard.press(key)
             elif action == "up":
-                pyautogui.keyUp(key)
+                keyboard.release(key)
         except Exception as e:
             print("按键处理出错:", e)
         finally:
             key_queue.task_done()
 
 
+# 启动后台线程（守护线程）
 threading.Thread(target=key_worker, daemon=True).start()
 
 # 阈值设置

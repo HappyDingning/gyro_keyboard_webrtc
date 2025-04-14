@@ -1,6 +1,6 @@
 // —— 全局状态 ——
 let pc, dc;
-let baseline = { alpha: 0, beta: 0 };
+let baseline = { alpha: 0, beta: 0, gamma: 0 };
 let calibrated = false;
 const statusEl = document.getElementById("calibrate-status");
 
@@ -27,6 +27,7 @@ function calibrate() {
     const cb = (event) => {
         baseline.alpha = event.alpha;
         baseline.beta  = event.beta;
+        baseline.gamma  = event.gamma;
         calibrated = true;
         updateStatus();
         window.removeEventListener("deviceorientation", cb);
@@ -40,7 +41,8 @@ function handleOrientation(event) {
     if (!calibrated || !dc || dc.readyState !== "open") return;
     const diffAlpha = event.alpha - baseline.alpha;
     const diffBeta  = event.beta  - baseline.beta;
-    dc.send(JSON.stringify({ alpha: diffAlpha, beta: diffBeta }));
+    const diffGamma  = event.gamma  - baseline.gamma;
+    dc.send(JSON.stringify({ alpha: diffAlpha, beta: diffBeta, gamma: diffGamma }));
 }
 
 // 请求 iOS 设备方向权限并启动 WebRTC
