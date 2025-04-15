@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>设备方向控制 Demo（WebRTC）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            color: #0f0;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .pairing {
+            margin-bottom: 1rem;
+        }
+
+        input,
+        button {
+            font-size: 1rem;
+            padding: 0.5rem;
+            margin: 0.2rem;
+        }
+
+        .status {
+            font-size: 1.2rem;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="pairing">
+            <label for="pairing-code">配对码：</label>
+            <input id="pairing-code" placeholder="输入配对码" />
+            <button id="set-code">设置</button>
+        </div>
+        <div class="status">
+            <p>将手机戴在头顶，双击屏幕任意位置进行校准</p>
+            <p id="calibrate-status">尚未校准 ⏳</p>
+            <p id="connection-status">连接状态：等待配对码 ⏳</p>
+        </div>
+    </div>
+    <script src="client.js"></script>
+</body>
+
+</html>

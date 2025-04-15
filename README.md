@@ -7,16 +7,15 @@
 ## 功能
 
 - **实时传输**：通过 WebRTC DataChannel 传输 `alpha`（左右）和 `beta`（前后）角度差值  
-- **按键模拟**：Python 端接收数据后调用 [PyAutoGUI](https://pyautogui.readthedocs.io/) 模拟键盘事件  
+- **按键模拟**：Python 端接收数据后调用 [pynput](https://github.com/moses-palmer/pynput) 模拟键盘事件  
 
 ---
 
 ## 前提条件
 
 - **Python 3.7+**  
-- **pip**  
 - **虚拟环境**（`venv` 或 `virtualenv`，强烈推荐）  
-- **手机端浏览器**：请使用 **Firefox**（Android/iOS），因为 Firefox 允许在 HTTP 页面中访问陀螺仪数据；其他浏览器可能需要 HTTPS  
+- **关闭电脑防火墙**：请关闭电脑防火墙，以免手机和电脑连接失败
 
 ---
 
@@ -50,43 +49,32 @@ pip install -r requirements.txt
 或者直接：
 
 ```bash
-pip install aiohttp aiortc pyautogui
+pip install aiohttp aiortc pynput
 ```
 
 ---
 
-## 运行服务器
+## 运行电脑端
 
 ```bash
-python server.py --host 0.0.0.0 --port 8080
+python local_control.py
 ```
-
-- `--host`：监听地址，默认为 `0.0.0.0`  
-- `--port`：监听端口，默认为 `8080`  
-- `--cert-file`、`--key-file`：启用 HTTPS（可选）  
-- `-v` / `--verbose`：打开调试日志  
-
-> **防火墙提示**  
-> - **Windows**：在“Windows 防火墙”中允许端口 `8080`  
-> - **Linux (ufw)**：`sudo ufw allow 8080`  
 
 ---
 
-## 客户端使用
+## 手机端使用
 
-1. **网络**：确保 PC 与手机在同一 Wi‑Fi 或手机热点下。  
-2. **查看本机 IP**：  
-   - Windows：`ipconfig`  
-   - macOS/Linux：`ifconfig` 或 `ip addr show`  
-3. **打开页面**：在手机 Firefox 中访问  
+1. **网络**：确保 PC 与手机在同一 Wi‑Fi 或手机热点下，并关闭电脑的防火墙。
+2. **手机打开页面**：
    ```
-   http://<PC_IP>:8080
+   https://9uecr1n4yd.execute-api.us-east-1.amazonaws.com/default/index.html
    ```  
-4. **校准**：  
+3. **校准**：  
    - 将手机水平放置于头顶  
    - 双击屏幕任意位置，状态由 “尚未校准 ⏳” 变为 “已校准 ✅”  
-   - 校准成功后会记录基线角度  
-5. **使用**：  
+   - 校准成功后会记录基线角度
+4. **等待手机端和受控端连接成功**
+5. **使用**：
    - **左右摇头**：按下并保持 “A”/“D”  
    - **前后点头**：按下并保持 “W”/“S”  
    - **保持屏幕常亮**，否则设备方向事件会中断  
@@ -107,12 +95,8 @@ python server.py --host 0.0.0.0 --port 8080
 
 ## 常见问题
 
-- **无法获取方向数据？**  
-  在 Firefox 中允许“传感器”权限，或者刷新页面重试。  
-- **按键无响应？**  
-  确保 PyAutoGUI 安装正确，并且操作系统允许模拟按键（macOS 需在“系统偏好设置 → 安全性与隐私”中授权）。  
-- **使用 Chrome/Safari？**  
-  这些浏览器在 HTTP 页面上通常禁止陀螺仪访问，建议使用 Firefox 或启用 HTTPS。  
+- **手机端提示连接失败？**  
+  需要关闭电脑的防火墙，并重新连接。
 
 ---
 
@@ -120,9 +104,11 @@ python server.py --host 0.0.0.0 --port 8080
 
 ```
 .
-├── server.py       # 后端主程序
-├── index.html      # 前端页面
-├── client.js       # 前端脚本
+│── lambda  # 在 aws lambda 上运行的信令服务相关程序
+│ ├── client.js  # 前端js
+│ ├── index.html  # 前端主页
+│ └── lambda_function.py  # 信令服务主程序
+├── local_control.py  # 电脑端主程序
 └── requirements.txt
 ```
 
