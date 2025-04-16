@@ -49,7 +49,7 @@ pip install -r requirements.txt
 或者直接：
 
 ```bash
-pip install aiohttp aiortc pynput
+pip install aiohttp aiortc pynput webui2
 ```
 
 ---
@@ -57,7 +57,7 @@ pip install aiohttp aiortc pynput
 ## 运行电脑端
 
 ```bash
-python local_control.py
+python app.py
 ```
 
 ---
@@ -108,7 +108,7 @@ python local_control.py
 │ ├── client.js  # 前端js
 │ ├── index.html  # 前端主页
 │ └── lambda_function.py  # 信令服务主程序
-├── local_control.py  # 电脑端主程序
+├── app.py  # 电脑端主程序
 └── requirements.txt
 ```
 
